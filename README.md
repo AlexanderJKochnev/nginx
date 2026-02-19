@@ -2,7 +2,7 @@
 порядок запуска:
 
 1. создание внешней сети
-   1. docker network create my_shared_network
+   1. docker network create shared_network
 2. запуск nginx
    1. docker compose up --build -d
 3. во всех docker-compose указать:

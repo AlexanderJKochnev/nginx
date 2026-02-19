@@ -14,9 +14,9 @@ services:
     # Если сертификатов нет - получаем их в режиме standalone
     entrypoint: /bin/sh -c "
       if [ ! -f /etc/letsencrypt/live/abc8888.ru/fullchain.pem ]; then
-      certbot certonly --manual \
+      certbot certonly --standalone \
       --non-interactive --agree-tos --email admin@abc8888.ru \
-      -d abc8888.ru -d *.abc8888.ru;
+      -d abc8888.ru -d api.abc8888.ru;
       else
       echo 'Certificates already exist';
       fi"
