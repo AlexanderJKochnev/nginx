@@ -50,7 +50,7 @@ services:
 
 networks:
   shared_network:
-    external: true
+    driver: bridge
 
 volumes:
   certs_data:
