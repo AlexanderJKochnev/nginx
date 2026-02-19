@@ -1,0 +1,53 @@
+# docker-compose.yaml
+# сервис для запуска nginx
+# docker compose up -d --build
+# перезепуск nginx
+# docker compose -f docker-compose.xeon.yaml restart nginx_gateway
+services:
+  # 1. Сервис-инициализатор (запустится один раз и выключится)
+  certbot_init:
+    image: ghcr.io/alexanderjkochnev/certbot:latest
+    container_name: certbot_init
+    volumes:
+      - certs_data:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    # Если сертификатов нет - получаем их в режиме standalone
+    entrypoint: /bin/sh -c "
+      if [ ! -f /etc/letsencrypt/live/abc8888.ru/fullchain.pem ]; then
+      certbot certonly --manual \
+      --non-interactive --agree-tos --email admin@abc8888.ru \
+      -d abc8888.ru -d *.abc8888.ru;
+      else
+      echo 'Certificates already exist';
+      fi"
+    ports:
+      - "80:80" # Временно занимает порт 80 для проверки домена
+    networks:
+      - shared_network
+  
+  nginx_gateway:
+    # image: nginx:stable-alpine
+    image: ghcr.io/alexanderjkochnev/nginx1.28.1:stable-alpine
+    container_name: nginx_gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/static:/etc/nginx/static:ro
+      - certs_data:/etc/letsencrypt       # Сертификаты сохраняются тут
+      - certbot_www:/var/www/certbot      # Для проверки Let's Encrypt
+    networks:
+      - shared_network
+    depends_on:
+      certbot_init:
+        condition: service_completed_successfully
+    command: /bin/sh -c "echo '0 12 * * * certbot renew --quiet --post-hook \"nginx -s reload\"' > /etc/crontabs/root && crond && nginx -g 'daemon off;'"
+  networks:
+    shared_network:
+      external: true
+
+volumes:
+  certs_data:
+  certbot_www:
