@@ -2,7 +2,7 @@
 # сервис для запуска nginx
 # docker compose up -d --build
 # перезепуск nginx
-# docker compose -f docker-compose.xeon.yaml restart nginx_gateway
+# docker compose -f docker-compose.yaml restart nginx_gateway
 services:
   # 1. Сервис-инициализатор (запустится один раз и выключится)
   certbot_init:
