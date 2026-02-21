@@ -19,6 +19,7 @@ services:
       -d abc8888.ru \
       -d api.abc8888.ru \
       -d test.abc8888.ru \
+      -d kan.abc8888.ru \
       -d api.test.abc8888.ru;
       else
       echo 'Certificates already exist';
