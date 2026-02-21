@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # обновление cretificate
-docker compose run --rm certbot_init certonly --standalone \
-      --non-interactive --agree-tos --email admin@abc8888.ru \
+docker compose run --rm certbot_init certonly --webroot --webroot-path=/var/www/certbot \
       -d abc8888.ru \
       -d api.abc8888.ru \
       -d test.abc8888.ru \
