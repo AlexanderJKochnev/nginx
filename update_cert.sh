@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # обновление cretificate
-docker compose run --rm certbot certonly --standalone \
+docker compose run --rm certbot_init certonly --standalone \
       --non-interactive --agree-tos --email admin@abc8888.ru \
       -d abc8888.ru \
       -d api.abc8888.ru \
