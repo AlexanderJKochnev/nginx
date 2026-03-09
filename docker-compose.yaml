@@ -39,7 +39,7 @@ services:
       - ./nginx/static:/etc/nginx/static:ro
       - certs_data:/etc/letsencrypt       # Сертификаты сохраняются тут
       - certbot_www:/var/www/certbot      # Для проверки Let's Encrypt
-      - ./.htpasswd:/etc/nginx/.htpasswd:ro # файл паролей
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro  # файл паролей
     networks:
       - shared_network
     depends_on:
