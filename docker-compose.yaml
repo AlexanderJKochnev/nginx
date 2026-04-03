@@ -35,11 +35,20 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/static:/etc/nginx/static:ro
-      - certs_data:/etc/letsencrypt       # Сертификаты сохраняются тут
-      - certbot_www:/var/www/certbot      # Для проверки Let's Encrypt
-      - ${PWD}/.htpasswd:/etc/nginx/.htpasswd:ro  # файл паролей
+      - /home/alex/dockers/nginx_gateway/conf.d:/etc/nginx/conf.d
+      - /home/alex/dockers/nginx_gateway/static:/etc/nginx/static:ro
+        
+        # Именованные тома оставляем как есть (они управляются через /var/lib/docker/volumes)
+        - certs_data:/etc/letsencrypt
+        - certbot_www:/var/www/certbot
+        
+        # Файл паролей тоже по абсолютному пути
+        - /home/alex/dockers/nginx_gateway/.htpasswd:/etc/nginx/.htpasswd:ro
+      # - ./nginx/conf.d:/etc/nginx/conf.d
+      # - ./nginx/static:/etc/nginx/static:ro
+      # - certs_data:/etc/letsencrypt       # Сертификаты сохраняются тут
+      # - certbot_www:/var/www/certbot      # Для проверки Let's Encrypt
+      # - ${PWD}/.htpasswd:/etc/nginx/.htpasswd:ro  # файл паролей
     networks:
       - shared_network
     depends_on:

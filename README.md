@@ -19,6 +19,5 @@
       auth_basic "Netdata Private Area";
       auth_basic_user_file /etc/nginx/.htpasswd;
 
-5. 
 
 
