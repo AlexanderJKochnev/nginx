@@ -1,1 +1,4 @@
 # Byte-compiled / optimized / DLL files
+.DS_Store
+nginx/.DS_Store
+.env

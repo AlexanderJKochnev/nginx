@@ -50,6 +50,16 @@ services:
 networks:
   shared_network:
     driver: bridge
+  clickhouse_network:
+    name: clickhouse_network
+    driver: bridge
+  clickhousepg_network:
+    name: clickhousepg_network
+    driver: bridge
+  vllm_network:
+    name: vllm_network
+    driver: bridge
+    name: vllm_network
 
 volumes:
   certs_data:
