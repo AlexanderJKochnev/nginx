@@ -35,8 +35,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /home/alex/dockers/nginx_gateway/conf.d:/etc/nginx/conf.d
-      - /home/alex/dockers/nginx_gateway/static:/etc/nginx/static:ro
+      - /home/alex/dockers/nginx_gateway/nginx/conf.d:/etc/nginx/conf.d
+      - /home/alex/dockers/nginx_gateway/nginx/static:/etc/nginx/static:ro
       - certs_data:/etc/letsencrypt
       - certbot_www:/var/www/certbot
       - /home/alex/dockers/nginx_gateway/.htpasswd:/etc/nginx/.htpasswd:ro
