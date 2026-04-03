@@ -50,7 +50,9 @@ services:
 networks:
   shared_network:
     driver: bridge
-
+    ipam:
+      config:
+        - subnet: 172.90.10.0/24
 volumes:
   certs_data:
   certbot_www:
