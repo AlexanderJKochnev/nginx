@@ -59,7 +59,6 @@ networks:
   vllm_network:
     name: vllm_network
     driver: bridge
-    name: vllm_network
 
 volumes:
   certs_data:
