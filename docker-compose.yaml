@@ -5,8 +5,10 @@ services:
     image: ghcr.io/alexanderjkochnev/certbot:latest
     container_name: certbot_init
     volumes:
-      - certs_data:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
+      - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
+      - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
+      # - certs_data:/etc/letsencrypt
+      # - certbot_www:/var/www/certbot
     # Если сертификатов нет - получаем их в режиме standalone
     entrypoint: /bin/sh -c "
       if [ ! -f /etc/letsencrypt/live/abc8888.ru/fullchain.pem ]; then
@@ -35,11 +37,16 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /home/alex/dockers/nginx_gateway/nginx/conf.d:/etc/nginx/conf.d
-      - /home/alex/dockers/nginx_gateway/nginx/static:/etc/nginx/static:ro
-      - certs_data:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
-      - /home/alex/dockers/nginx_gateway/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ${BIND_VOLUMES}/nginx/conf.d:/etc/nginx/conf.d
+      - ${BIND_VOLUMES}/nginx/static:/etc/nginx/static:ro
+      - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
+      - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
+      - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      # - /home/alex/dockers/nginx_gateway/nginx/conf.d:/etc/nginx/conf.d
+      # - /home/alex/dockers/nginx_gateway/nginx/static:/etc/nginx/static:ro
+      # - certs_data:/etc/letsencrypt
+      # - certbot_www:/var/www/certbot
+      # - /home/alex/dockers/nginx_gateway/.htpasswd:/etc/nginx/.htpasswd:ro
     networks:
       - shared_network
     depends_on:
