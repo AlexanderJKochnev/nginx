@@ -18,6 +18,14 @@
       # Авторизация
       auth_basic "Netdata Private Area";
       auth_basic_user_file /etc/nginx/.htpasswd;
-
+## TROUBLESHOOTING
+5. Проверка настроек:
+   1. docker exec -it nginx_gateway sh
+   2. cat /etc/nginx/nginx.conf
+   3. cat /etc/nginx/conf.d/default.conf
+6. Проверка сетей
+   1. docker network ls 
+   2. docker inspect nginx_gateway | grep Networks -A 10
+   3. docker inspect test-app-1 | grep Networks -A 10
 
 

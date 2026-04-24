@@ -2,7 +2,8 @@
 services:
   # 1. Сервис-инициализатор (запустится один раз и выключится)
   certbot_init:
-    image: ghcr.io/alexanderjkochnev/certbot:latest
+    image: certbot:local
+    # image: ghcr.io/alexanderjkochnev/certbot:latest
     container_name: certbot_init
     volumes:
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
@@ -26,11 +27,13 @@ services:
     ports:
       - "80:80" # Временно занимает порт 80 для проверки домена
     networks:
-      - shared_network
+      shared_network:
+        ipv4_address: ${IP_NGINX}
   
   nginx_gateway:
     # image: nginx:stable-alpine
-    image: ghcr.io/alexanderjkochnev/nginx1.28.1:stable-alpine
+    image: nginx:local
+    # image: ghcr.io/alexanderjkochnev/nginx1.28.1:stable-alpine
     container_name: nginx_gateway
     restart: unless-stopped
     ports:
@@ -48,7 +51,8 @@ services:
       # - certbot_www:/var/www/certbot
       # - /home/alex/dockers/nginx_gateway/.htpasswd:/etc/nginx/.htpasswd:ro
     networks:
-      - shared_network
+      shared_network:
+        ipv4_address: ${IP_NGINX}
     depends_on:
       certbot_init:
         condition: service_completed_successfully
@@ -59,7 +63,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.90.10.0/24
+        - subnet: ${SUBNET_NGINX}
 volumes:
   certs_data:
   certbot_www:
