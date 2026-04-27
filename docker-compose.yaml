@@ -45,6 +45,8 @@ services:
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
       - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
       - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./nginx/static/robots.txt:/etc/nginx/static/robots.txt:ro
+      - ./nginx/static/security.txt:/etc/nginx/static/.well-known/security.txt:ro
       # - /home/alex/dockers/nginx_gateway/nginx/conf.d:/etc/nginx/conf.d
       # - /home/alex/dockers/nginx_gateway/nginx/static:/etc/nginx/static:ro
       # - certs_data:/etc/letsencrypt
