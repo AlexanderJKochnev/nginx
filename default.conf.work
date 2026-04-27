@@ -40,30 +40,6 @@ server {
         alias /etc/nginx/static/security.txt;
     }
 
-    location /items/ {
-        set $upstream_app prod-app-1;
-        proxy_pass http://$upstream_app:8091;
-
-        # Разрешаем загрузку больших файлов (по умолчанию в Nginx всего 1MB)
-        client_max_body_size 50M;
-
-        proxy_buffering off;
-        proxy_read_timeout 300s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        # Проброс авторизации
-        proxy_set_header Authorization $http_authorization;
-        proxy_pass_header Authorization;
-
-        # Увеличиваем буферы для тяжелых запросов
-        proxy_buffer_size          128k;
-        proxy_buffers              4 256k;
-        proxy_busy_buffers_size    256k;
-    }
-
     # --- FRONTEND (Статика) ---
     location / {
         # set $upstream_front preact_front;
@@ -180,7 +156,7 @@ server {
     ssl_certificate /etc/letsencrypt/live/abc8888.ru/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/abc8888.ru/privkey.pem;
 
-    # Сжатие Gzip (как в рабочем конфиге)
+    # Сжатие Gzip (как было в рабочем конфиге)
     gzip on;
     gzip_proxied any;
     gzip_types text/plain text/css application/json application/javascript text/xml;
@@ -192,30 +168,6 @@ server {
 
     location ~ ^/(.well-known/)?security.txt {
         alias /etc/nginx/static/security.txt;
-    }
-
-    location /items/ {
-        set $upstream_app test-app-1;
-        proxy_pass http://$upstream_app:8091;
-
-        # Разрешаем загрузку больших файлов (по умолчанию в Nginx всего 1MB)
-        client_max_body_size 50M;
-
-        proxy_buffering off;
-        proxy_read_timeout 300s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        # Проброс авторизации
-        proxy_set_header Authorization $http_authorization;
-        proxy_pass_header Authorization;
-
-        # Увеличиваем буферы для тяжелых запросов
-        proxy_buffer_size          128k;
-        proxy_buffers              4 256k;
-        proxy_busy_buffers_size    256k;
     }
 
     # --- FRONTEND (Статика) ---
