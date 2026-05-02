@@ -40,7 +40,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ${BIND_VOLUMES}/nginx/conf.d:/etc/nginx/conf.d
+      # - ${BIND_VOLUMES}/nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ${BIND_VOLUMES}/nginx/static:/etc/nginx/static:ro
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
       - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
