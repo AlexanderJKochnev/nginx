@@ -1,52 +1,42 @@
 services:
   certbot_init:
     image: certbot:local
-    # image: ghcr.io/alexanderjkochnev/certbot:latest
     container_name: certbot_init
     volumes:
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
       - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
-      # - certs_data:/etc/letsencrypt
-      # - certbot_www:/var/www/certbot
-    # Если сертификатов нет - получаем их в режиме standalone
     entrypoint: /bin/sh -c "
       if [ ! -f /etc/letsencrypt/live/abc8888.ru/fullchain.pem ]; then
-      certbot certonly --standalone \
-      --non-interactive --agree-tos --email admin@abc8888.ru \
-      -d abc8888.ru \
-      -d api.abc8888.ru \
-      -d test.abc8888.ru \
-      -d kan.abc8888.ru \
-      -d api.test.abc8888.ru;
+        certbot certonly --standalone \
+        --non-interactive --agree-tos --email admin@abc8888.ru \
+        -d abc8888.ru \
+        -d api.abc8888.ru \
+        -d test.abc8888.ru \
+        -d kan.abc8888.ru \
+        -d api.test.abc8888.ru;
       else
         certbot renew --webroot --webroot-path=/var/www/certbot --quiet;
-        # echo 'Certificates already exist';
       fi"
     ports:
-      - "80:80" # Временно занимает порт 80 для проверки домена
+      - "80:80"
     networks:
       shared_network:
         ipv4_address: ${IP_NGINX}
 
   nginx_gateway:
-    # image: nginx:stable-alpine
     image: nginx:local
-    # image: ghcr.io/alexanderjkochnev/nginx1.28.1:stable-alpine
     container_name: nginx_gateway
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      # - ${BIND_VOLUMES}/nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ${BIND_VOLUMES}/nginx/static:/etc/nginx/static:ro
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
       - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
       - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
       - ./nginx/static:/etc/nginx/static:ro
-      # - ./nginx/static/robots.txt:/etc/nginx/static/robots.txt:ro
-      # - ./nginx/static/security.txt:/etc/nginx/static/.well-known/security.txt:ro
     networks:
       shared_network:
         ipv4_address: ${IP_NGINX}
@@ -61,6 +51,7 @@ networks:
     ipam:
       config:
         - subnet: ${SUBNET_NGINX}
+
 volumes:
   certs_data:
   certbot_www:
