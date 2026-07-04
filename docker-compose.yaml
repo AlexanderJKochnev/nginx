@@ -28,7 +28,7 @@ services:
     networks:
       shared_network:
         ipv4_address: ${IP_NGINX}
-  
+
   nginx_gateway:
     # image: nginx:stable-alpine
     image: nginx:local
