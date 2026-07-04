@@ -1,6 +1,26 @@
 # docker compose -f docker-compose.yaml restart nginx_gateway
 services:
-  # 1. Сервис-инициализатор (запустится один раз и выключится)
+  # 1. Сервис для периодического обновления сертификатов
+  certbot_renew:
+    image: certbot:local
+    container_name: certbot_renew
+    volumes:
+      - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
+      - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
+    entrypoint: /bin/sh -c "
+      while true; do
+        echo 'Checking certificate renewal...';
+        certbot renew --webroot --webroot-path=/var/www/certbot \
+          --quiet \
+          --post-hook 'wget --no-check-certificate --post-data=\"\" http://nginx_gateway:80/nginx_reload || true';
+        sleep 86400; # Проверка раз в сутки
+      done"
+    networks:
+      shared_network:
+        ipv4_address: ${IP_NGINX}
+    restart: unless-stopped
+
+  # 2. Инициализатор сертификатов (запускается один раз)
   certbot_init:
     image: certbot:local
     # image: ghcr.io/alexanderjkochnev/certbot:latest
@@ -13,23 +33,26 @@ services:
     # Если сертификатов нет - получаем их в режиме standalone
     entrypoint: /bin/sh -c "
       if [ ! -f /etc/letsencrypt/live/abc8888.ru/fullchain.pem ]; then
-      certbot certonly --standalone \
-      --non-interactive --agree-tos --email admin@abc8888.ru \
-      -d abc8888.ru \
-      -d api.abc8888.ru \
-      -d test.abc8888.ru \
-      -d kan.abc8888.ru \
-      -d api.test.abc8888.ru \
-      -d netdata.abc8888.ru;
+        echo 'Получаем новые сертификаты...';
+        certbot certonly --webroot --webroot-path=/var/www/certbot \
+          --non-interactive --agree-tos --email admin@abc8888.ru \
+          -d abc8888.ru \
+          -d api.abc8888.ru \
+          -d test.abc8888.ru \
+          -d kan.abc8888.ru \
+          -d api.test.abc8888.ru \
+          -d netdata.abc8888.ru;
       else
-      echo 'Certificates already exist';
+        echo 'Сертификаты уже существуют. Проверяем срок действия...';
+        certbot renew --webroot --webroot-path=/var/www/certbot --dry-run || true;
       fi"
     ports:
-      - "80:80" # Временно занимает порт 80 для проверки домена
+      - "80:80"
     networks:
       shared_network:
         ipv4_address: ${IP_NGINX}
-  
+    restart: "no"
+
   nginx_gateway:
     # image: nginx:stable-alpine
     image: nginx:local
