@@ -2,6 +2,7 @@
 
 # обновление cretificate
 docker compose run --rm certbot_init certonly --webroot --webroot-path=/var/www/certbot \
+      --force-renewal \
       --expand \
       -d abc8888.ru \
       -d api.abc8888.ru \
