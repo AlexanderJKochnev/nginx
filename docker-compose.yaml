@@ -19,10 +19,10 @@ services:
       -d api.abc8888.ru \
       -d test.abc8888.ru \
       -d kan.abc8888.ru \
-      -d api.test.abc8888.ru \
-      -d netdata.abc8888.ru;
+      -d api.test.abc8888.ru;
       else
-      echo 'Certificates already exist';
+        certbot renew --webroot --webroot-path=/var/www/certbot --quiet;
+        # echo 'Certificates already exist';
       fi"
     ports:
       - "80:80" # Временно занимает порт 80 для проверки домена
