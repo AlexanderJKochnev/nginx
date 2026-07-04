@@ -1,6 +1,5 @@
 # docker compose -f docker-compose.yaml restart nginx_gateway
 services:
-  # 1. Сервис для периодического обновления сертификатов
   certbot_renew:
     image: certbot:local
     container_name: certbot_renew
