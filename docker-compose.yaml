@@ -38,6 +38,8 @@ services:
       - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
       - ./nginx/static:/etc/nginx/static:ro
       - ./nginx/robots_shared.conf:/etc/nginx/robots_shared.conf:ro
+      # логи для fail2ban
+      - /var/log/nginx:/var/log/nginx
     networks:
       shared_network:
         ipv4_address: ${IP_NGINX}
