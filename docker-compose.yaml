@@ -32,7 +32,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ${BIND_VOLUMES}/nginx/static:/etc/nginx/static:ro
+      # - ${BIND_VOLUMES}/nginx/static:/etc/nginx/static:ro
       - ${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt
       - ${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot
       - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
