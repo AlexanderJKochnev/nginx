@@ -31,6 +31,20 @@ port     = http,https
 filter   = nginx-http-auth
 logpath  = /var/log/nginx/error.log
 
+# вечные баны для рецидивистов
+[recidive]
+enabled   = true
+logpath   = /var/log/fail2ban.log
+filter    = recidive
+# Повторный бан на 1 год (31536000 секунд) или поставьте -1 для вечного бана
+bantime   = 31536000
+# Искать рецидивистов среди тех, кто был забанен за последние сутки
+findtime  = 86400
+# Если бот попал в бан 2 раза за сутки, отправляем его в долгосрочный бан
+maxretry  = 2
+
+
+
 ## Шаг 4. Настройка фильтра регулярных выражений
 sudo nano /etc/fail2ban/filter.d/nginx-noscript.conf
 [Definition]
@@ -52,5 +66,14 @@ sudo fail2ban-client status
 ### Посмотреть детальный статус бана для конкретного фильтра (например, сколько IP сейчас заблокировано в nginx-noscript):
 sudo fail2ban-client status nginx-noscript
 
+### посмотреть забаненные ip
+sudo grep "Ban" /var/log/fail2ban.log
+
+
+
+
 ### Разбанить IP адрес вручную, если вы случайно заблокировали себя при тестах:
 sudo fail2ban-client set nginx-noscript unbanip НАШ_IP_АДРЕС
+
+# подключение бота телеграмм
+userid 656690295
