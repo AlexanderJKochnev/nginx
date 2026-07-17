@@ -15,6 +15,8 @@ bantime  = 3600
 findtime = 600
 # Количество разрешенных ошибок перед баном
 maxretry = 5
+# защита nftables
+banaction = nftables[type=multiport]
 
 # Фильтр на частые ошибки 404 (поиск админок, уязвимостей, как в ваших логах с .git/config)
 [nginx-noscript]
