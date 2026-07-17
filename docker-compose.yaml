@@ -38,7 +38,7 @@ services:
       - ${BIND_VOLUMES}/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
       - ./nginx/static:/etc/nginx/static:ro
       - ./nginx/robots_shared.conf:/etc/nginx/robots_shared.conf:ro
-      - ./nginx/block_scanners.conf:etc/nginx/block_scanners.conf:ro
+      - ./nginx/block_scanners.conf:/etc/nginx/block_scanners.conf:ro
       # логи для fail2ban
       - /var/log/nginx:/var/log/nginx
     networks:
