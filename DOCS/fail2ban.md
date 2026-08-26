@@ -55,6 +55,16 @@ logpath  = /var/log/auth.log
 maxretry = 3
 banaction = nftables[type=multiport]  
 
+# Блокируем агентов-плохишей по имени
+[nginx-badagents]
+enabled  = true
+port     = http,https
+filter   = nginx-badagents
+logpath  = /var/log/nginx/access.log
+# Баним сразу после 1-й попытки
+maxretry = 1
+banaction = nftables[type=multiport, ports="80,443"]
+
 
 
 ## Шаг 4. Настройка фильтра регулярных выражений
@@ -65,6 +75,18 @@ failregex = ^<HOST> -.*"GET .*\.(php|asp|aspx|exe|pl|cgi|git|env|yaml|yml).* HTT
             ^<HOST> -.*"GET /admin.* HTTP/.*" 404
 
 ignoreregex =
+### --- РАСШИРЕННАЯ ВЕРСИЯ ---
+
+[Definition]
+failregex = ^<HOST> -.*"GET .*\.(php|asp|aspx|exe|pl|cgi|git|env|yaml|yml|tfstate|npmrc|git-credentials).* HTTP/.*" (200|301|403|404)
+            ^<HOST> -.*"GET /(wp-|-query|wp-admin|admin|manager).* HTTP/.*" (200|301|403|404)
+            ^<HOST> -.*"POST /(cgi-bin|bin).* HTTP/.*" (400|403|404)
+
+ignoreregex =
+
+## Шаг 4.2. фильтр плохишей (баним по именам ботов)
+sudo nano /etc/fail2ban/filter.d/nginx-badagents.conf
+
 
 ## Шаг 5. Запуск и проверка
 
@@ -75,9 +97,16 @@ sudo systemctl enable fail2ban
 ### Посмотреть статус и список активных защит (jail):
 sudo fail2ban-client status
 
+### Проверить существующий лог на наличие вредителей выяляемых конкретной защитой
+fail2ban-regex /var/log/nginx/access.log /etc/fail2ban/filter.d/nginx-noscript.conf
+fail2ban-regex /var/log/nginx/access.log /etc/fail2ban/filter.d/nginx-badagents.conf
+
+
+
 ### Посмотреть детальный статус бана для конкретного фильтра (например, сколько IP сейчас заблокировано в nginx-noscript):
 sudo fail2ban-client status nginx-noscript
 sudo fail2ban-client status nginx-http-auth
+sudo fail2ban-client status nginx-badagents
 sudo fail2ban-client status recidive
 sudo fail2ban-client status sshd
 
