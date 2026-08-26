@@ -40,6 +40,7 @@ services:
       - ./nginx/robots_shared.conf:/etc/nginx/robots_shared.conf:ro
       - ./nginx/block_scanners.conf:/etc/nginx/block_scanners.conf:ro
       - ./nginx/rate_limits.conf:/etc/nginx/rate_limits.conf:ro
+      - ./nginx/blockips.conf:/etc/nginx/blockips.conf
       # логи для fail2ban
       - /var/log/nginx:/var/log/nginx
     networks:

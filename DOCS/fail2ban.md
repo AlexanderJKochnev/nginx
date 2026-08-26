@@ -18,13 +18,14 @@ maxretry = 5
 # защита nftables
 banaction = nftables[type=multiport]
 
-# Фильтр на частые ошибки 404 (поиск админок, уязвимостей, как в ваших логах с .git/config)
+# Фильтр на частые ошибки 404 (поиск админок, уязвимостей, как в логах с .git/config)
 [nginx-noscript]
 enabled  = true
 port     = http,https
 filter   = nginx-noscript
 logpath  = /var/log/nginx/access.log
 maxretry = 3
+banaction = nftables[type=multiport, ports="80,443"]
 
 # Стандартная защита от DDOS / частых запросов
 [nginx-http-auth]
@@ -44,6 +45,15 @@ bantime   = 31536000
 findtime  = 86400
 # Если бот попал в бан 2 раза за сутки, отправляем его в долгосрочный бан
 maxretry  = 2
+
+# Блокируем ВСЁ для брутфорсеров
+[sshd]
+enabled  = true
+port     = 9229,22
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 3
+banaction = nftables[type=multiport]  
 
 
 
@@ -67,6 +77,9 @@ sudo fail2ban-client status
 
 ### Посмотреть детальный статус бана для конкретного фильтра (например, сколько IP сейчас заблокировано в nginx-noscript):
 sudo fail2ban-client status nginx-noscript
+sudo fail2ban-client status nginx-http-auth
+sudo fail2ban-client status recidive
+sudo fail2ban-client status sshd
 
 ### посмотреть забаненные ip
 sudo grep "Ban" /var/log/fail2ban.log
@@ -75,7 +88,7 @@ sudo grep "Ban" /var/log/fail2ban.log
 
 
 ### Разбанить IP адрес вручную, если вы случайно заблокировали себя при тестах:
-sudo fail2ban-client set nginx-noscript unbanip НАШ_IP_АДРЕС
+sudo fail2ban-client set nginx-noscript unbanip 94.242.168.162
 
 # подключение бота телеграмм
 userid 656690295
