@@ -87,6 +87,10 @@ ignoreregex =
 ## Шаг 4.2. фильтр плохишей (баним по именам ботов)
 sudo nano /etc/fail2ban/filter.d/nginx-badagents.conf
 
+Definition]
+failregex = ^<HOST> -.*"GET .* HTTP/.*" \d+ \d+ "-" ".*(zgrab|l9explore|l9tcpid|masscan|sqlmap|nmap|python-requests).*"
+ignoreregex =
+
 
 ## Шаг 5. Запуск и проверка
 
