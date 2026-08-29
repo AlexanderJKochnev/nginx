@@ -1,0 +1,55 @@
+[DEFAULT]
+# Время блокировки (в секундах). 3600 = 1 час
+bantime  = 3600
+# Окно времени, за которое считаются совпадения (10 минут)
+findtime = 600
+# Количество разрешенных ошибок перед баном
+maxretry = 5
+# защита nftables
+banaction = nftables[type=multiport]
+
+
+# Фильтр на частые ошибки 404 (поиск админок, уязвимостей, как в ваших логах с .git/config)
+[nginx-noscript]
+enabled  = true
+port     = http,https
+filter   = nginx-noscript
+logpath  = /var/log/nginx/access.log
+maxretry = 3
+banaction = nftables[type=multiport, ports="80,443"]
+
+# Стандартная защита от DDOS / частых запросов
+[nginx-http-auth]
+enabled  = true
+port     = http,https
+filter   = nginx-http-auth
+logpath  = /var/log/nginx/error.log
+
+[recidive]
+enabled   = true
+logpath   = /var/log/fail2ban.log
+filter    = recidive
+# Повторный бан на 1 год (31536000 секунд) или поставьте -1 для вечного бана
+bantime   = 31536000
+# Искать рецидивистов среди тех, кто был забанен за последние сутки
+findtime  = 86400
+# Если бот попал в бан 2 раза за сутки, отправляем его в долгосрочный бан
+maxretry  = 2
+
+# Блокируем ВСЁ для брутфорсеров
+[sshd]
+enabled  = true
+port     = 9229,22
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 3
+banaction = nftables[type=multiport]
+
+[nginx-badagents]
+enabled  = true
+port     = http,https
+filter   = nginx-badagents
+logpath  = /var/log/nginx/access.log
+# Баним сразу после 1-й попытки
+maxretry = 1
+banaction = nftables[type=multiport, ports="80,443"]
