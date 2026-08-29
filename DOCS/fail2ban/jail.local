@@ -8,6 +8,14 @@ maxretry = 5
 # защита nftables
 banaction = nftables[type=multiport]
 
+# Добавляем действие при бане
+actionban = curl \
+  -u "myuser:ВАШ_ПАРОЛЬ" \
+  -H "Title: 🔒 Fail2ban Блокировка" \
+  -H "Priority: high" \
+  -H "Tags: warning,lock" \
+  -d "Джейл: <name> | Забанен IP: <ip> после <failures> попыток." \
+  https://abc8888.ru
 
 # Фильтр на частые ошибки 404 (поиск админок, уязвимостей, как в ваших логах с .git/config)
 [nginx-noscript]
