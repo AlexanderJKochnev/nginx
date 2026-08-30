@@ -44,8 +44,8 @@ services:
       - ./nginx/rate_limits.conf:/etc/nginx/rate_limits.conf:ro
       - ./nginx/blockips.conf:/etc/nginx/blockips.conf:ro
       - ./nginx/swagger_admin.conf:/etc/nginx/swagger_admin.conf:ro
-      - .nginx/other_apps.conf:/etc/nginx/other_apps.conf:ro
-      - .nginx/enable_guard.conf:/etc/nginx/enable_guard.conf:ro
+      - ./nginx/other_apps.conf:/etc/nginx/other_apps.conf:ro
+      - ./nginx/enable_guard.conf:/etc/nginx/enable_guard.conf:ro
       # логи для fail2ban
       - /var/log/nginx:/var/log/nginx
     networks:
