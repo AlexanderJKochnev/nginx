@@ -8,7 +8,7 @@
 3. обновление сертификата после добавления subdomain
    1. добавить subdomain в docker-compose.yaml 
    2. docker-compose -f docker-compose.yaml down 
-   3. docker volume rm nginx_gateway_certs_data 
+   3. sudo rm /mnt/hdd_data/@named_volumes/nginx/certs_data
    4. docker-compose -f docker-compose.yaml up -d
 4. настройка паролей
    1. sudo apt-get update && sudo apt-get install apache2-utils -y
