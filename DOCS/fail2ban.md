@@ -122,6 +122,7 @@ sudo grep "Ban" /var/log/fail2ban.log
 
 ### Разбанить IP адрес вручную, если вы случайно заблокировали себя при тестах:
 sudo fail2ban-client set nginx-noscript unbanip 94.242.168.162
+sudo fail2ban-client set recidive unbanip 192.168.0.1
 
 # подключение бота телеграмм
 userid 656690295
