@@ -1,4 +1,6 @@
 # защита по белым спискам
+мягкая перезагрузка
+docker compose exec nginx_gateway nginx -s reload
 ## ${BIND_VOLUMES}/nginx_shared:/app/shared_nginx_config/auto_routes.conf
 
 1. по указанному выше пути при каждом перезапуске fastapi генерируется список белых путей.
