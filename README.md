@@ -1,4 +1,26 @@
 ## NGINX для проектов на сервере
+
+РУЧНОЙ ПЕРЕВЫПУСК СЕРТИФИКАТА (ЕСЛИ НЕ СРАБОТАЛА АВТОМАТИКА)
+source .env && docker run --rm \
+  -v "${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt" \
+  -v "${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot" \
+  certbot:local certonly --webroot \
+  -w /var/www/certbot \
+  --cert-name abc8888.ru \
+  --expand \
+  --non-interactive --agree-tos --email admin@abc8888.ru \
+  -d abc8888.ru \
+  -d api.abc8888.ru \
+  -d test.abc8888.ru \
+  -d kan.abc8888.ru \
+  -d mmx1.abc8888.ru \
+  -d mmx2.abc8888.ru \
+  -d mmx3.abc8888.ru \
+  -d api.test.abc8888.ru \
+  -d tat.abc8888.ru \
+  && docker exec nginx_gateway nginx -s reload
+
+
 порядок запуска:
 
 1. ~~создание внешней сети~~
@@ -27,5 +49,3 @@
    1. docker network ls 
    2. docker inspect nginx_gateway | grep Networks -A 10
    3. docker inspect test-app-1 | grep Networks -A 10
-
-

@@ -59,8 +59,9 @@ services:
     depends_on:
       certbot_init:
         condition: service_completed_successfully
-    command: /bin/sh -c "echo '0 12 * * * certbot renew --quiet --post-hook \"nginx -s reload\"' > /etc/crontabs/root && crond && nginx -g 'daemon off;'"
-
+    # command: /bin/sh -c "echo '0 12 * * * certbot renew --quiet --post-hook \"nginx -s reload\"' >
+    # /etc/crontabs/root && crond && nginx -g 'daemon off;'"
+    command: /bin/sh -c "while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g 'daemon off;'"
 networks:
   shared_network:
     driver: bridge
