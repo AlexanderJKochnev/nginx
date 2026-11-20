@@ -1,6 +1,6 @@
 ## NGINX для проектов на сервере
 
-РУЧНОЙ ПЕРЕВЫПУСК СЕРТИФИКАТА (ЕСЛИ НЕ СРАБОТАЛА АВТОМАТИКА)
+### РУЧНОЙ ПЕРЕВЫПУСК СЕРТИФИКАТА (ЕСЛИ НЕ СРАБОТАЛА АВТОМАТИКА)
 source .env && docker run --rm \
   -v "${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt" \
   -v "${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot" \
@@ -20,8 +20,15 @@ source .env && docker run --rm \
   -d tat.abc8888.ru \
   && docker exec nginx_gateway nginx -s reload
 
+### ПРОВЕРКА АВТОПРОДЛЕНИЯ
 
-порядок запуска:
+source .env && docker run --rm \
+  -v "${BIND_VOLUMES}/nginx/certs_data:/etc/letsencrypt" \
+  -v "${BIND_VOLUMES}/nginx/certbot_www:/var/www/certbot" \
+  certbot:local renew --dry-run
+
+
+### порядок запуска:
 
 1. ~~создание внешней сети~~
    1. ~~docker network create shared_network~~
